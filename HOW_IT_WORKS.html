@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="dcterms.date" content="2026-10-18" />
+  <title>AdaptPods: AirPods Head Control for Windows</title>
+  <style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+
+ul.task-list[class]{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+font-size: inherit;
+width: 0.8em;
+margin: 0 0.8em 0.2em -1.6em;
+vertical-align: middle;
+}
+.display.math{display: block; text-align: center; margin: 0.5rem auto;}
+
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+{ counter-reset: source-line 0; }
+pre.numberSource code > span
+{ position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+color: #aaaaaa;
+}
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
+div.sourceCode
+{ }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } 
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.at { color: #7d9029; } 
+code span.bn { color: #40a070; } 
+code span.bu { color: #008000; } 
+code span.cf { color: #007020; font-weight: bold; } 
+code span.ch { color: #4070a0; } 
+code span.cn { color: #880000; } 
+code span.co { color: #60a0b0; font-style: italic; } 
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.do { color: #ba2121; font-style: italic; } 
+code span.dt { color: #902000; } 
+code span.dv { color: #40a070; } 
+code span.er { color: #ff0000; font-weight: bold; } 
+code span.ex { } 
+code span.fl { color: #40a070; } 
+code span.fu { color: #06287e; } 
+code span.im { color: #008000; font-weight: bold; } 
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.kw { color: #007020; font-weight: bold; } 
+code span.op { color: #666666; } 
+code span.ot { color: #007020; } 
+code span.pp { color: #bc7a00; } 
+code span.sc { color: #4070a0; } 
+code span.ss { color: #bb6688; } 
+code span.st { color: #4070a0; } 
+code span.va { color: #19177c; } 
+code span.vs { color: #4070a0; } 
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } 
+</style>
+  <style type="text/css">body{font-family:system-ui,Segoe UI,sans-serif;max-width:940px;margin:50px auto;padding:0 26px;line-height:1.65;color:#183047;background:#fafcfe}h1{font-size:2.5rem;line-height:1.15;color:#102032}h2{margin-top:2.4rem;border-top:1px solid #d6e2eb;padding-top:1.2rem}h3{color:#24516e}a{color:#00679a}table{border-collapse:collapse;width:100%;margin:24px 0}th,td{text-align:left;border-bottom:1px solid #cfdae4;padding:9px 12px;vertical-align:top}th{background:#e8f0f6}pre{background:#102032;color:#dff6ee;padding:18px;overflow:auto;border-radius:8px}code{font-size:.9em}p.subtitle{font-size:1.2rem;color:#47637a}strong{color:#103e55}@media print{body{margin:0;max-width:none;font-size:10pt}pre{white-space:pre-wrap}h2{break-after:avoid}table{font-size:9pt}}
+</style>
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">AdaptPods: AirPods Head Control for Windows</h1>
+<p class="subtitle">Prototype implementation and developer guide</p>
+<p class="date">October 18, 2026</p>
+</header>
+<nav id="TOC" role="doc-toc">
+<ul>
+<li><a href="#what-has-been-built" id="toc-what-has-been-built">1. What
+has been built</a></li>
+<li><a href="#system-architecture" id="toc-system-architecture">2.
+System architecture</a></li>
+<li><a href="#the-windows-sensor-dependency" id="toc-the-windows-sensor-dependency">3. The Windows sensor
+dependency</a></li>
+<li><a href="#installation-and-first-run" id="toc-installation-and-first-run">4. Installation and first run</a>
+<ul>
+<li><a href="#a.-exercise-the-app-with-synthetic-motion" id="toc-a.-exercise-the-app-with-synthetic-motion">A. Exercise the app
+with synthetic motion</a></li>
+<li><a href="#b.-connect-the-external-windows-bridge" id="toc-b.-connect-the-external-windows-bridge">B. Connect the external
+Windows bridge</a></li>
+<li><a href="#c.-stop-and-disconnect" id="toc-c.-stop-and-disconnect">C.
+Stop and disconnect</a></li>
+</ul></li>
+<li><a href="#packet-interface-and-validation" id="toc-packet-interface-and-validation">5. Packet interface and
+validation</a></li>
+<li><a href="#calibration-and-pointer-mapping" id="toc-calibration-and-pointer-mapping">6. Calibration and pointer
+mapping</a></li>
+<li><a href="#dwell-clicking" id="toc-dwell-clicking">7. Dwell
+clicking</a></li>
+<li><a href="#windows-input-and-pause-behavior" id="toc-windows-input-and-pause-behavior">8. Windows input and pause
+behavior</a></li>
+<li><a href="#files-and-development-workflow" id="toc-files-and-development-workflow">9. Files and development
+workflow</a></li>
+<li><a href="#verification-record-and-acceptance-plan" id="toc-verification-record-and-acceptance-plan">10. Verification record
+and acceptance plan</a></li>
+<li><a href="#sources" id="toc-sources">11. Sources</a></li>
+</ul>
+</nav>
+<h2 id="what-has-been-built">1. What has been built</h2>
+<p>AdaptPods is a Python desktop application that receives
+head-orientation measurements and maps them to a mouse pointer. The
+intended use is hands-free computer interaction, with user-adjustable
+settings for people who want to control a pointer through head
+movement.</p>
+<p>Implemented in this package:</p>
+<ul>
+<li>A loopback UDP receiver for OpenTrack-format orientation
+packets.</li>
+<li>A preview canvas that does not move the Windows pointer.</li>
+<li>A Windows pointer backend and optional left-click injection.</li>
+<li>Neutral calibration using multiple samples and circular angle
+averaging.</li>
+<li>Separate horizontal and vertical movement ranges and axis
+reversal.</li>
+<li>Time-dependent exponential smoothing and a center deadzone.</li>
+<li>Dwell clicking with a move-away requirement before another
+click.</li>
+<li>Windows global keys for pause, calibration, and stop.</li>
+<li>Automatic pause and invalidation of calibration after detected
+signal loss.</li>
+<li>A synthetic motion sender and 26 automated tests.</li>
+</ul>
+<p><strong>This is a source prototype, not a verified end-to-end AirPods
+product.</strong> Neither a Windows machine nor physical AirPods were
+available for validation during this implementation. No accuracy,
+latency, fatigue reduction, or user-benefit measurements are
+claimed.</p>
+<h2 id="system-architecture">2. System architecture</h2>
+<p>The components run in this order:</p>
+<ol type="1">
+<li>AirPods produce motion measurements.</li>
+<li>A separately installed Windows driver and motion bridge obtain
+orientation.</li>
+<li>The bridge sends a local UDP datagram containing yaw, pitch, and
+roll.</li>
+<li>AdaptPods validates and calibrates those angles.</li>
+<li>Its controller filters and maps yaw and pitch to screen
+coordinates.</li>
+<li>Preview mode displays a dot. Desktop mode moves the Windows
+cursor.</li>
+<li>If enabled, the dwell state machine emits one left click after a
+stable hold.</li>
+</ol>
+<p>The application does not implement Apple’s Bluetooth protocol,
+install a driver, or use Apple’s macOS Core Motion API on Windows. The
+sensor bridge is an external dependency with its own hardware support
+and licensing. OpenTrack itself is not required: AdaptPods consumes the
+compatible packet format directly.</p>
+<h2 id="the-windows-sensor-dependency">3. The Windows sensor
+dependency</h2>
+<p>The inspected upstream project is <a href="https://github.com/FIocker/aap-head-tracker">FIocker/aap-head-tracker</a>,
+commit <code>767bbd37b93979084bdcc3e4dc9b9f13c72f82ce</code>. Its README
+reports testing with AirPods Max 2 model A3454 / firmware 8E258, Windows
+11, and MagicAAP. It targets a 64-bit PC and requires the .NET 9 SDK to
+build. Other models are described as experimental candidates, not
+verified compatible devices. These are maintainer-reported results, not
+tests performed for AdaptPods.</p>
+<p>The bridge depends on the third-party <a href="https://magicpods.app/">MagicAAP driver</a>. Its maintainer’s
+current instructions determine installation requirements. This package
+neither includes nor installs it. Driver signing and system
+configuration can affect feasibility. Do not treat ordinary Bluetooth
+audio connectivity as proof of motion access. No instructions for
+changing Windows security configuration are automated here.</p>
+<p>Upstream source is GPL-3.0-only. This package communicates with it as
+a separate process and does not bundle upstream code or binaries.
+Preserve attribution and review the applicable license before
+redistributing any upstream components.</p>
+<p><strong>Your exact AirPods model, firmware, Bluetooth adapter, and
+Windows installation: Insufficient data to verify
+compatibility.</strong> The first hardware milestone is obtaining valid
+changing yaw/pitch values while turning your head.</p>
+<h2 id="installation-and-first-run">4. Installation and first run</h2>
+<h3 id="a.-exercise-the-app-with-synthetic-motion">A. Exercise the app
+with synthetic motion</h3>
+<p>Install Python 3.10 or newer on Windows, including Tcl/Tk and the
+Python launcher. Extract the project ZIP. Open a terminal in the
+<code>AdaptPods</code> folder and run:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode powershell"><code class="sourceCode powershell"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>py <span class="op">-</span>3 app<span class="op">.</span><span class="fu">py</span></span></code></pre></div>
+<p>In another terminal in the same folder:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode powershell"><code class="sourceCode powershell"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>py <span class="op">-</span>3 simulator<span class="op">.</span><span class="fu">py</span></span></code></pre></div>
+<p>Equivalent launchers are <code>Start-Windows.cmd</code> and
+<code>Start-Simulator.cmd</code>. No third-party Python dependencies are
+used.</p>
+<p>The simulator sends four seconds of neutral orientation, then smooth
+periodic angles. Click <strong>Calibrate neutral</strong> and wait for
+completion. Click <strong>Start / Pause</strong> to move the preview
+dot. If calibration occurs while the synthetic signal is moving, the
+neutral position may be offset; restart the simulator to repeat its
+neutral interval.</p>
+<p>Leave desktop control and dwell clicking unchecked for this first
+test. Synthetic motion establishes only that the receiver/controller
+path works. It is not evidence of live sensor operation.</p>
+<h3 id="b.-connect-the-external-windows-bridge">B. Connect the external
+Windows bridge</h3>
+<p>First stop the simulator; it must not run alongside a real bridge.
+Install the driver separately using its maintainer’s instructions. Pair
+and wear the AirPods. Install the .NET 9 SDK and Git if needed. In a
+separate folder:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode powershell"><code class="sourceCode powershell"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>git clone https<span class="op">://</span>github<span class="op">.</span><span class="fu">com</span><span class="op">/</span>FIocker<span class="op">/</span>aap<span class="op">-</span>head<span class="op">-</span>tracker<span class="op">.</span><span class="fu">git</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cd</span> aap<span class="op">-</span>head<span class="op">-</span>tracker</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>git checkout 767bbd37b93979084bdcc3e4dc9b9f13c72f82ce</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>dotnet build</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>dotnet run <span class="op">--</span> list</span></code></pre></div>
+<p>Start AdaptPods first so its local receiver is ready. Then start the
+bridge:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode powershell"><code class="sourceCode powershell"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>dotnet run <span class="op">--</span> bridge <span class="op">--</span>host 127<span class="op">.</span><span class="fu">0</span><span class="op">.</span><span class="fu">0</span><span class="op">.</span><span class="fu">1</span> <span class="op">--</span>port 4242</span></code></pre></div>
+<p>The upstream default targets its documented tested device. For
+another model, consult upstream’s current protocol options. This guide
+does not claim that changing an option will make an unsupported model
+work. Do not run another receiver on the same UDP port. If the driver is
+busy, follow upstream guidance about competing consumers.</p>
+<p>When AdaptPods shows changing yaw/pitch values, sit comfortably, face
+your preferred neutral direction, and calibrate. Check axis directions
+in preview. Use <strong>Reverse horizontal</strong> or <strong>Reverse
+vertical</strong> and Apply if needed. Select <strong>Control Windows
+desktop</strong>, then Start again. Checking this option intentionally
+pauses the controller first.</p>
+<p>Only after pointing works, enable <strong>dwell left-click</strong>,
+then Start again. Escape stops desktop control; F8 toggles Start/Pause;
+F9 starts calibration. A person who cannot use these keys should have
+assistance for initial testing: the current emergency-key design has not
+been validated as an independent accessible stop method.</p>
+<h3 id="c.-stop-and-disconnect">C. Stop and disconnect</h3>
+<p>Pause or stop AdaptPods first. Stop the upstream bridge with Ctrl+C.
+Close the simulator if it is running. Closing AdaptPods releases its
+socket. The app does not manage sensor start/stop commands; the external
+bridge owns that lifecycle.</p>
+<h2 id="packet-interface-and-validation">5. Packet interface and
+validation</h2>
+<p>The receiver binds only to <code>127.0.0.1</code>, default port
+<code>4242</code>. A datagram must be exactly 48 bytes, represented by
+Python’s <code>struct</code> format <code>&lt;6d</code>: six
+little-endian double-precision values.</p>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Field</th>
+<th>Unit</th>
+<th>AdaptPods use</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>x, y, z</td>
+<td>Bridge translation fields</td>
+<td>Validated as finite, otherwise ignored</td>
+</tr>
+<tr class="even">
+<td>yaw</td>
+<td>Degrees</td>
+<td>Horizontal control</td>
+</tr>
+<tr class="odd">
+<td>pitch</td>
+<td>Degrees</td>
+<td>Vertical control</td>
+</tr>
+<tr class="even">
+<td>roll</td>
+<td>Degrees</td>
+<td>Display only</td>
+</tr>
+</tbody>
+</table>
+<p>Packets with incorrect length, nonfinite values, or rotations outside
+±360 degrees are discarded. All valid buffered packets are drained up to
+a per-frame limit of 256, and the newest is used. The limit prevents
+continuous packet traffic from indefinitely starving GUI stop
+controls.</p>
+<p>The protocol carries no sequence number, sensor timestamp,
+authentication, or device identity. Freshness is measured from local
+receipt time, not from the age of the original sensor measurement.
+Loopback limits network exposure but does not authenticate other local
+processes. Two simultaneous senders can produce inconsistent control and
+must be avoided.</p>
+<h2 id="calibration-and-pointer-mapping">6. Calibration and pointer
+mapping</h2>
+<p>Calibration lasts 1.5 seconds, requires at least 10 received samples,
+and rejects movement if either axis has a circular standard deviation
+over 3 degrees. These are prototype settings, not clinically validated
+thresholds.</p>
+<p>The neutral angle is computed with
+<code>atan2(mean(sin(angle)), mean(cos(angle)))</code>. Circular
+averaging avoids an incorrect neutral near zero when samples straddle
++180 and −180 degrees.</p>
+<p>For each new sample:</p>
+<ol type="1">
+<li>Subtract neutral with wraparound into the interval [−180, 180).</li>
+<li>Smooth the angular difference using
+<code>alpha = 1 - exp(-dt / tau)</code>.</li>
+<li>Map angles inside the deadzone to the screen center.</li>
+<li>Map the remaining range linearly to the corresponding screen
+half.</li>
+<li>Clamp the normalized coordinate to [0, 1].</li>
+<li>Reverse either axis if configured, then convert to pixels.</li>
+</ol>
+<p>Default horizontal range is 20 degrees each side of neutral; vertical
+range is 15 degrees each side. Smoothing time constant is 0.10 seconds
+and the center deadzone is 1 degree. These values are starting points
+for testing. Smaller movement ranges make the pointer more sensitive.
+Larger smoothing constants slow its response and can increase lag.</p>
+<p>This is <strong>absolute angular pointing</strong>: the same head
+orientation maps to the same screen location. Head orientation is not
+eye gaze. Translation, leaning, and eye movement are not treated as
+pointing measurements. The mapping assumes a stable seated relationship
+to the screen. Neutral does not automatically drift or recenter during
+operation.</p>
+<p>Desktop bounds cover Windows’ virtual desktop, including monitors
+with negative coordinates. Mapping across a rectangular virtual desktop
+can include gaps between monitors; nonrectangular layouts need hardware
+testing. DPI awareness is requested before window creation.</p>
+<h2 id="dwell-clicking">7. Dwell clicking</h2>
+<p>Dwell is off by default. When enabled, the controller creates an
+anchor at the current mapped pointer position. Staying within 14 pixels
+of that anchor for the default 1.2 seconds requests one click. Moving
+beyond the radius starts a new dwell interval.</p>
+<p>After a click, the controller suppresses further clicks until the
+mapped pointer moves at least 40 pixels away from the clicked position.
+This prevents continuous clicking while the head remains still. The
+progress bar shows the current dwell fraction.</p>
+<p>Dwell uses commanded pointer positions, not queried positions after
+physical mouse movement or application cursor warping. Mixing physical
+mouse use with active head control needs evaluation. There is no
+implemented right click, double click, drag lock, scroll mode, target
+snapping, or nod recognition. No claim is made that stillness reliably
+represents click intent for every user.</p>
+<h2 id="windows-input-and-pause-behavior">8. Windows input and pause
+behavior</h2>
+<p>The Windows backend uses <code>SetCursorPos</code> to move the
+pointer and <code>SendInput</code> to submit paired left-button down/up
+events. It declares the complete <code>INPUT</code> union so the Windows
+structure layout includes its keyboard and hardware variants. Tests
+check the expected structure size for the current pointer width.</p>
+<p><code>GetAsyncKeyState</code> is polled for Escape, F8, and F9 while
+the GUI loop runs. Input errors pause control. A partial click
+submission triggers a best-effort button release before reporting
+failure.</p>
+<p>No valid packet for more than 0.35 seconds pauses an active session
+or calibration and clears the neutral pose. Reconnection requires
+calibration and explicit Start. The controller also resets filtering and
+dwell state across a sample gap. A stalled GUI cannot service stop keys
+until its loop resumes; this is a prototype polling design, not a
+separate watchdog service.</p>
+<p>Windows restricts input across some privilege boundaries and
+desktops. Elevated applications, UAC prompts, lock screens, secure
+desktops, exclusive games, Remote Desktop, and mixed-DPI displays are
+not verified. The app does not request administrator privileges or
+bypass Windows restrictions.</p>
+<h2 id="files-and-development-workflow">9. Files and development
+workflow</h2>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>File</th>
+<th>Responsibility</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>app.py</code></td>
+<td>Tk UI, receiver, calibration collection, state transitions</td>
+</tr>
+<tr class="even">
+<td><code>core.py</code></td>
+<td>Packet validation, filtering, pointer mapping, dwell logic</td>
+</tr>
+<tr class="odd">
+<td><code>windows_input.py</code></td>
+<td>Windows APIs and native input structures</td>
+</tr>
+<tr class="even">
+<td><code>simulator.py</code></td>
+<td>Synthetic loopback motion sender</td>
+</tr>
+<tr class="odd">
+<td><code>tests/test_core.py</code></td>
+<td>Controller, packet, ABI-size, and UDP tests</td>
+</tr>
+<tr class="even">
+<td><code>tests/test_app.py</code></td>
+<td>Headless receiver/application integration tests</td>
+</tr>
+<tr class="odd">
+<td><code>Start-Windows.cmd</code></td>
+<td>Launch Python app on Windows</td>
+</tr>
+<tr class="even">
+<td><code>Start-Simulator.cmd</code></td>
+<td>Launch synthetic sender on Windows</td>
+</tr>
+</tbody>
+</table>
+<p>Run tests from this folder:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode powershell"><code class="sourceCode powershell"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>py <span class="op">-</span>3 <span class="op">-</span>m unittest discover <span class="op">-</span>s tests <span class="op">-</span>v</span></code></pre></div>
+<p>Use a different UDP port only if both sender and receiver are
+configured to match:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode powershell"><code class="sourceCode powershell"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>py <span class="op">-</span>3 app<span class="op">.</span><span class="fu">py</span> <span class="op">--</span>port 4243</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>py <span class="op">-</span>3 simulator<span class="op">.</span><span class="fu">py</span> <span class="op">--</span>port 4243</span></code></pre></div>
+<p>Settings are session-only and are not saved to disk. The app makes no
+cloud requests and has no telemetry or logging subsystem. It does not
+record audio or camera images. The behavior of the independently
+installed driver/bridge is outside this application’s
+implementation.</p>
+<h2 id="verification-record-and-acceptance-plan">10. Verification record
+and acceptance plan</h2>
+<p><strong>Performed:</strong> Python 3.12.14 on Linux; 26 automated
+tests passed; Python source compilation passed; Tkinter import passed.
+Tests cover malformed/nonfinite packets, local UDP delivery, angular
+wraparound, center/extreme mapping, inversion, smoothing, calibration
+rejection, circular neutral averaging, dwell rearming, stale-signal
+handling, and expected native structure size. Headless GUI-logic tests
+use lightweight widget stand-ins and real UDP sockets.</p>
+<p><strong>Not performed:</strong> rendered GUI inspection, execution of
+user32 calls on Windows, live driver access, physical AirPods tracking,
+actual desktop clicks, Bluetooth reconnection tests, or participant
+trials. Passing logic tests does not verify those layers.</p>
+<p>Complete these acceptance checks on the target PC before describing
+the app as functional with AirPods:</p>
+<ol type="1">
+<li>Record Windows version, AirPods model/firmware, adapter, and
+driver/bridge versions.</li>
+<li>Confirm motion values change in the expected direction; confirm only
+one sender runs.</li>
+<li>Calibrate in preview and reach each screen edge without exceeding
+comfortable movement.</li>
+<li>Verify Pause, Escape, recalibration, and stop after disconnecting
+the AirPods.</li>
+<li>Enable desktop mode and test on an ordinary non-elevated
+application.</li>
+<li>Test one dwell click, no repeated stationary click, and rearming
+after moving away.</li>
+<li>Test monitor boundaries and reconnect behavior.</li>
+<li>Measure target selection time, target misses, accidental clicks, and
+user-rated comfort in a defined task. Label sample sizes and conditions.
+Do not report simulated results as participant results.</li>
+</ol>
+<p>If motion cannot be obtained from the exact AirPods model, the
+receiver and simulator remain usable development components, but the
+live hardware milestone is unresolved. An iPhone or Mac forwarding
+bridge is a possible future integration, not included in this
+release.</p>
+<h2 id="sources">11. Sources</h2>
+<p>Sources inspected during implementation; upstream behavior may change
+after the recorded commit.</p>
+<ul>
+<li><a href="https://github.com/FIocker/aap-head-tracker">AAP Head
+Tracker source and README</a>, inspected commit
+<code>767bbd37b93979084bdcc3e4dc9b9f13c72f82ce</code>: bridge
+requirements, reported hardware testing, UDP sender interface,
+licensing.</li>
+<li><a href="https://magicpods.app/">MagicPods / MagicAAP</a>: external
+driver provider linked by the bridge.</li>
+<li><a href="https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-sendinput">Microsoft
+SendInput</a>: synthetic input and privilege restrictions.</li>
+<li><a href="https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-input">Microsoft
+INPUT structure</a>: native structure layout.</li>
+<li><a href="https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setcursorpos">Microsoft
+SetCursorPos</a>: cursor positioning API.</li>
+<li><a href="https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getasynckeystate">Microsoft
+GetAsyncKeyState</a>: key-state polling.</li>
+<li><a href="https://developer.apple.com/documentation/coremotion/cmheadphonemotionmanager">Apple
+CMHeadphoneMotionManager</a>: context for the separate Apple-platform
+API; not used by this Windows implementation.</li>
+<li><a href="https://github.com/willwade/AirpodHeadmouse/">Existing
+AirpodHeadmouse project</a>: prior art for AirPods-based pointer
+control.</li>
+</ul>
+</body>
+</html>
